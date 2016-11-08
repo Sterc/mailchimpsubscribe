@@ -1,0 +1,38 @@
+{
+    "name": "MailChimpSubscribe",
+    "lowCaseName": "mailchimpsubscribe",
+    "description": "Handles Mailchimp subscriptions",
+    "author": "Sander Drenth",
+    "version": "0.1.0",
+    "package":{
+        "systemSettings": [{
+            "key": "mailchimp_api_key",
+            "type": "textfield",
+            "area": "default"
+        }, {
+            "key": "list_tv",
+            "type": "textfield",
+            "area": "default"
+        }],
+        "elements": {
+            "categories": [
+                {
+                    "name": "MailChimpSubscribe"
+                }
+            ],
+            "snippets":
+            [
+                {
+                    "name": "MailChimpSubscribe",
+                    "category": "MailChimpSubscribe",
+                    "file": "mailchimpsubscribe.snippet.php"
+                },
+                {
+                    "name": "MailChimpGetLists",
+                    "category": "MailChimpSubscribe",
+                    "file": "mailchimpgetlists.snippet.php"
+                }
+            ]
+        }
+    }
+}
