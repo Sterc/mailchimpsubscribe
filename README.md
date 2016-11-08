@@ -2,6 +2,9 @@
 
 Package for subscribing users in Mailchimp lists using FormIt. Adds a snippet for retrieving Mailchimp lists in a single select TV and a FormIt hook for subscribing Mailchimp users to the list provided in the pages Template Variable.
 
+## Todo
+* Add option to add Mailchimp list ID as FormIt property instead of needing to set in inside the page TV.
+
 ### Functionalities ###
 
 * FormIt hook for subscribing users to Mailchimp lists based on TV value
