@@ -6,7 +6,12 @@
  * @subpackage lexicon
  */
 
-$_lang['mailchimpsubscribe']                     = 'MailChimpSubscribe';
+$_lang['mailchimpsubscribe'] = 'MailChimpSubscribe';
+
+$_lang['setting_mailchimpsubscribe.mailchimp_api_key']      = 'MailChimp API key';
+$_lang['setting_mailchimpsubscribe.mailchimp_api_key_desc'] = 'API key can be found in MailChimp under your Profile --> Extras --> API keys';
+$_lang['setting_mailchimpsubscribe.list_tv']                = 'TV containing Mailchimp lists';
+$_lang['setting_mailchimpsubscribe.list_tv_desc']           = 'Enter either the ID or the name of the TV';
 
 $_lang['mailchimpsubscribe.error.no_list_found'] = 'Subscription failed: No list was provided to subscribe to.';
 $_lang['mailchimpsubscribe.error.subscribed']    = 'You\'ve already been subscribed to this mailing list.';
