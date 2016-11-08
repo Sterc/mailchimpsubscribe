@@ -155,8 +155,6 @@ class MailChimpSubscribe
             $listId = $this->modx->resource->getTVValue($this->mcListTV);
         }
 
-        var_dump($listId);exit;
-
         return $listId;
     }
 
