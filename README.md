@@ -11,7 +11,13 @@ Package for subscribing users in Mailchimp lists using FormIt. Adds a snippet fo
 
 * Add MailChimp API Key in systemsettings: mailchimpsubscribe.mailchimp_api_key
 * Create a new single select TV variable and set the input option values to:    
-    @EVAL return $modx->runSnippet('MailChimpGetLists');
+    
+```
+#!php
+
+@EVAL return $modx->runSnippet('MailChimpGetLists');
+```
+
 * Add MailChimp List ID TV in systemsettings: mailchimpsubscribe.list_tv
 * Add MailChimpSubscribe to your FormIt hooks
 * Add in your chunk the placeholder fi.error.mailchimp, which holds all MailChimp error messages.
@@ -23,7 +29,11 @@ Package for subscribing users in Mailchimp lists using FormIt. Adds a snippet fo
 
 
 ### Example usage ###
+
+
 ```
+#!html
+
 [[!FormIt?
     &hooks=`spam,MailChimpSubscribe,redirect`
     &validate=`email:email:required,name:required,company_name:required,nospam:blank`
@@ -57,4 +67,5 @@ Package for subscribing users in Mailchimp lists using FormIt. Adds a snippet fo
         <input type="submit" name="newsletter-submit" value="Submit">
     </div>
         
-</form>```
+</form>
+```
