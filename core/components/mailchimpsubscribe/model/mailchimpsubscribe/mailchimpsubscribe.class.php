@@ -141,6 +141,24 @@ class MailChimpSubscribe
     }
 
     /**
+     * @param $scriptProperties
+     *
+     * @return null
+     */
+    private function setListId($scriptProperties)
+    {
+        if (isset($scriptProperties['mailchimpListId']) && !empty($scriptProperties['mailchimpListId'])) {
+            $listId = $scriptProperties['mailchimpListId'];
+        } else {
+            $listId = $this->modx->resource->getTVValue($this->mcListTV);
+        }
+
+        var_dump($listId);exit;
+
+        return $listId;
+    }
+
+    /**
      * Retrieve all MailChimp lists as TV select options.
      *
      * @return string
@@ -163,19 +181,20 @@ class MailChimpSubscribe
     /**
      *
      * @param $hook
+     * @param $scriptProperties
      * @return string
      */
-    public function subscribeMailChimp($hook)
+    public function subscribeMailChimp($hook, $scriptProperties)
     {
         $this->modx->lexicon->load('mailchimpsubscribe:default');
 
         $mc     = $this->initMailChimpApi();
         $values = $hook->getValues();
-        if ($values['newsgroup'] == 'no') {
+        if ($values['newsgroup'] != 'yes') {
             return true;
         }
 
-        $listId    = $this->modx->resource->getTVValue($this->mcListTV);
+        $listId    = $this->setListId($scriptProperties);
         $userEmail = trim(strtolower($values['email']));
         $userName  = trim($values['name']);
         $company   = trim($values['company_name']);

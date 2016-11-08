@@ -13,4 +13,4 @@ if (!($mailChimpSubscribe instanceof MailChimpSubscribe)) {
     return;
 }
 
-return $mailChimpSubscribe->subscribeMailChimp($hook);
+return $mailChimpSubscribe->subscribeMailChimp($hook, $scriptProperties);
