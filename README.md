@@ -10,7 +10,7 @@ Package for subscribing users in Mailchimp lists using FormIt. Adds a snippet fo
 ### How do I get set up? ###
 
 * Add MailChimp API Key in systemsettings: mailchimpsubscribe.mailchimp_api_key
-* Option 1: Create a new single select TV variable and set the input option values to:    
+* **Option 1:** Create a new single select TV variable and set the input option values to:    
     
 ```
 #!php
@@ -18,7 +18,7 @@ Package for subscribing users in Mailchimp lists using FormIt. Adds a snippet fo
 @EVAL return $modx->runSnippet('MailChimpGetLists');
 ```
 * Add MailChimp List ID TV in systemsettings: mailchimpsubscribe.list_tv
-* Option 2: Set the FormIt scriptProperty &mailchimpListId to the correct MailChimp List ID
+* **Option 2:** Set the FormIt scriptProperty &mailchimpListId to the correct MailChimp List ID
 * Add MailChimpSubscribe to your FormIt hooks
 * Add in your chunk the placeholder fi.error.mailchimp, which holds all MailChimp error messages.
 * Add a field called newsgroup, if the value of this field is set to yes, the user will be subscribed to the mailchimp list.
