@@ -24,12 +24,10 @@
             [
                 {
                     "name": "MailChimpSubscribe",
-                    "category": "MailChimpSubscribe",
                     "file": "mailchimpsubscribe.snippet.php"
                 },
                 {
                     "name": "MailChimpGetLists",
-                    "category": "MailChimpSubscribe",
                     "file": "mailchimpgetlists.snippet.php"
                 }
             ]
