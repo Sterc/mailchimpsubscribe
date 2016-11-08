@@ -141,6 +141,8 @@ class MailChimpSubscribe
     }
 
     /**
+     * Set mailchimp list id based on scriptproperty if it is set, else use tv value.
+     *
      * @param $scriptProperties
      *
      * @return null
