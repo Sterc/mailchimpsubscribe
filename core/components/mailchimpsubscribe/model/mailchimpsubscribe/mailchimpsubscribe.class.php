@@ -86,42 +86,42 @@ class MailChimpSubscribe
         $this->modx =& $modx;
         $this->namespace = $this->modx->getOption('namespace', $config, 'mailchimpsubscribe');
 
-        $basePath = $this->modx->getOption(
+        $corePath = $this->modx->getOption(
             'site.core_path',
             $config,
-            $this->modx->getOption('core_path')   . 'components/site/'
+            $this->modx->getOption('core_path')   . 'components/mailchimpsubscribe/'
         );
 
         $assetsUrl = $this->modx->getOption(
             'site.assets_url',
             $config,
-            $this->modx->getOption('assets_url')  . 'components/site/'
+            $this->modx->getOption('assets_url')  . 'components/mailchimpsubscribe/'
         );
 
         $assetsPath = $this->modx->getOption(
             'site.assets_path',
             $config,
-            $this->modx->getOption('assets_path') . 'components/site/'
+            $this->modx->getOption('assets_path') . 'components/mailchimpsubscribe/'
         );
 
         $this->config = array_merge([
-            'base_path'       => $basePath,
-            'core_path'       => $basePath,
-            'model_path'      => $basePath . 'model/',
-            'processors_path' => $basePath . 'processors/',
-            'elements_path'   => $basePath . 'elements/',
-            'templates_path'  => $basePath . 'templates/',
-            'assets_path'     => $assetsPath,
-            'js_url'          => $assetsUrl . 'js/',
-            'css_url'         => $assetsUrl . 'css/',
-            'assets_url'      => $assetsUrl,
-            'connector_url'   => $assetsUrl . 'connector.php',
-        ], $config);
+             'namespace'     => $this->namespace,
+             'corePath'      => $corePath,
+             'modelPath'     => $corePath . 'model/',
+             'chunksPath'    => $corePath . 'elements/chunks/',
+             'snippetsPath'  => $corePath . 'elements/snippets/',
+             'templatesPath' => $corePath . 'templates/',
+             'assetsPath'    => $assetsPath,
+             'assetsUrl'     => $assetsUrl,
+             'jsUrl'         => $assetsUrl . 'js/',
+             'cssUrl'        => $assetsUrl . 'css/',
+             'connectorUrl'  => $assetsUrl . 'connector.php'
+         ], $config);
 
         $this->mcListTV = $this->modx->getOption('mailchimpsubscribe.list_tv');
         $this->mcListTV = (is_numeric($this->mcListTV)) ? (int) $this->mcListTV : (string) $this->mcListTV;
 
-        $this->modx->addPackage('mailchimpsubscribe', $this->config['model_path']);
+        $this->modx->addPackage('mailchimpsubscribe', $this->config['modelPath']);
         $this->modx->lexicon->load('mailchimpsubscribe:default');
     }
 
