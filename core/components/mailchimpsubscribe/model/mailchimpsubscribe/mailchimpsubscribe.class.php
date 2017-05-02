@@ -205,7 +205,7 @@ class MailChimpSubscribe
         if (!isset($listId) || $listId === 0 || empty($listId)) {
             $hook->addError(
                 'mailchimp',
-                $this->modx->lexicon('mailchimpsubscribe.error.no_list_found', [], $this->modx->context->key)
+                $this->modx->lexicon('mailchimpsubscribe.error.no_list_found', [], $this->modx->cultureKey)
             );
             $hook->hasErrors();
             $this->modx->setPlaceholder('fi.validation_error', true);
@@ -299,7 +299,7 @@ class MailChimpSubscribe
                 $this->mcSubscribeMessage = $this->modx->lexicon(
                     'mailchimpsubscribe.error.subscribed',
                     [],
-                    $this->modx->context->key
+                    $this->modx->cultureKey
                 );
                 break;
             case 'unsubscribed':
@@ -314,14 +314,14 @@ class MailChimpSubscribe
                 $this->mcSubscribeMessage = $this->modx->lexicon(
                     'mailchimpsubscribe.error.pending',
                     [],
-                    $this->modx->context->key
+                    $this->modx->cultureKey
                 );
                 break;
             case 'cleaned':
                 $this->mcSubscribeMessage = $this->modx->lexicon(
                     'mailchimpsubscribe.error.cleaned',
                     [],
-                    $this->modx->context->key
+                    $this->modx->cultureKey
                 );
                 break;
         }
