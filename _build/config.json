@@ -2,8 +2,8 @@
     "name": "MailChimpSubscribe",
     "lowCaseName": "mailchimpsubscribe",
     "description": "Handles Mailchimp subscriptions",
-    "author": "Sander Drenth",
-    "version": "0.1.0",
+    "author": "Sterc",
+    "version": "1.0.0-pl",
     "package":{
         "systemSettings": [{
             "key": "mailchimp_api_key",
