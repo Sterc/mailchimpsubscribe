@@ -33,20 +33,20 @@
             ]
         }
     },
-    "build": {
-        "readme": "docs/readme.txt",
-        "license": "docs/license.txt",
-        "changelog": "docs/changelog.txt",
-        "resolver": {
-            "after": [
-                "setupoptions.resolver.php",
-                "stercextra.resolver.php"
-            ]
+        "build": {
+            "readme": "docs/readme.txt",
+            "license": "docs/license.txt",
+            "changelog": "docs/changelog.txt",
+            "resolver": {
+                "after": [
+                    "setupoptions.resolver.php",
+                    "stercextra.resolver.php"
+                ]
+            },
+            "setupOptions":{
+                "source": "setup.options.php"
+            }
         },
-        "setupOptions":{
-            "source": "setup.options.php"
-        }
-    },
     "dependencies": [{
         "name": "FormIt",
         "version": ">=2.2.8-pl"

@@ -1,8 +1,8 @@
 <?php
 /**
- * FormIt setup options
+ * MailChimpSubscribe setup options
  *
- * @package FormIt
+ * @package MailChimpSubscribe
  * @subpackage build
  */
 $package = 'MailChimpSubscribe';

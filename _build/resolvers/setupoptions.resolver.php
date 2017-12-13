@@ -1,8 +1,8 @@
 <?php
 /**
- * seoPro setup options resolver
+ * MailChimpSubscribe setup options resolver
  *
- * @package seoPro
+ * @package MailChimpSubscribe
  * @subpackage build
  */
 $package = 'MailChimpSubscribe';
