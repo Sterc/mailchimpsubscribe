@@ -1,5 +1,5 @@
-Changelog for MailChimpSubscribe.
+Changelog for MailChimpSubscribe, a hook for FormIt.
 
-MailChimpSubscribe 0.0.1
+MailChimpSubscribe 1.0.0-pl
 ==============
-- Initial release.
+First release of this Extra.

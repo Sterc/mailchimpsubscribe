@@ -1,8 +1,8 @@
 ---------------------------------------
 MailChimpSubscribe
 ---------------------------------------
-Version: 0.0.1
-Author: Sander Drenth <sander@sterc.nl>
+Version: 1.0.0-pl
+Author: Sterc <modx@sterc.nl>
 ---------------------------------------
 
 MailChimpSubscribe
