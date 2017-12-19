@@ -21,11 +21,12 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
                     'modSystemSetting',
                     array('key' => strtolower($package) . '.' . $key)
                 );
-
-                if ($settingObject) {
-                    $settingObject->set('value', $options[$key]);
-                    $settingObject->save();
+                if (!$settingObject) {
+                    $settingObject = $object->xpdo->newObject('modSystemSetting');
+                    $settingObject->set('key', strtolower($package) . '.' . $key);
                 }
+                $settingObject->set('value', $options[$key]);
+                $settingObject->save();
             }
         }
         $success = true;
