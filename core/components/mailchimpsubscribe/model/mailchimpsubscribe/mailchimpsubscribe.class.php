@@ -3,15 +3,21 @@ require_once dirname(dirname(dirname(__FILE__))) . '/libs/mailchimp-rest-api/src
 
 class MailChimpSubscribe
 {
+    const MC_ERROR_PH = 'mailchimp';
 
     /**
      * The modX object.
      *
      * @since    1.0.0
      * @access   public
-     * @var      null|modX      The modX object.
+     * @var      modX      The modX object.
      */
-    public $modx = null;
+    public $modx;
+
+    /**
+     * @var \VPS\MailChimp
+     */
+    public $mailchimp;
 
     /**
      * The namespace for this package.
@@ -30,6 +36,11 @@ class MailChimpSubscribe
      * @var      array          Config value holder.
      */
     public $config = [];
+
+    /**
+     * @var Sterc\FormIt\Hook
+     */
+    public $hook;
 
     /**
      * Holds mailchimp message for subscribing a user.
@@ -57,22 +68,29 @@ class MailChimpSubscribe
     private $mcSubscribeMode = 'create';
 
     /**
-     * Holds the List field used for name.
-     *
-     * @since   1.0.0
-     * @access  private
-     * @var     string              Mailchimp list field for name.
+     * Array containing mergefields and form fields mapping.
+     * @var array
      */
-    private $mcFieldName = 'FNAME';
+    private $mapping = [];
 
     /**
-     * Holds the List field used for company.
+     * Array containing all mergefields and form values.
      *
-     * @since   1.0.0
-     * @access  private
-     * @var     string              Mailchimp list field for company.
+     * @var array
      */
-    private $mcFieldCompany = 'FCOMPANY';
+    private $values = [];
+
+    /**
+     * Name of field used for subscribing to mailchimp newsletter.
+     * @var string
+     */
+    private $subscribeField = 'newsgroup';
+
+    /**
+     * Value that the subscribe field should have for subscribing a user to mailchimp.
+     * @var string
+     */
+    private $subscribeFieldValue = 'yes';
 
     /**
      * Initialize the class.
@@ -83,7 +101,7 @@ class MailChimpSubscribe
      */
     public function __construct(modX $modx, array $config = [])
     {
-        $this->modx =& $modx;
+        $this->modx      =& $modx;
         $this->namespace = $this->modx->getOption('namespace', $config, 'mailchimpsubscribe');
 
         $corePath = $this->modx->getOption(
@@ -119,25 +137,80 @@ class MailChimpSubscribe
          ], $config);
 
         $this->mcListTV = $this->modx->getOption('mailchimpsubscribe.list_tv');
-        $this->mcListTV = (is_numeric($this->mcListTV)) ? (int) $this->mcListTV : (string) $this->mcListTV;
+        $this->mcListTV = is_numeric($this->mcListTV) ? (int) $this->mcListTV : (string) $this->mcListTV;
 
         $this->modx->addPackage('mailchimpsubscribe', $this->config['modelPath']);
         $this->modx->lexicon->load('mailchimpsubscribe:default');
     }
 
     /**
+     * @param $hook
+     */
+    private function setHook($hook)
+    {
+        $this->hook = $hook;
+    }
+
+    private function setSubscribeFields()
+    {
+        if ($this->hook->config['mailchimpSubscribeField']) {
+            $this->subscribeField = $this->hook->config['mailchimpSubscribeField'];
+        }
+
+        if ($this->hook->config['mailchimpSubscribeFieldValue']) {
+            $this->subscribeFieldValue = $this->hook->config['mailchimpSubscribeFieldValue'];
+        }
+    }
+
+    /**
+     * Set the mailchimp merge tags configuration or add an error.
+     *
+     * @return bool
+     */
+    private function setMapping()
+    {
+        $config = $this->hook->config['mailchimpFields'];
+        $fields = array_filter(explode(',', $config));
+
+        if (!$fields) {
+            $this->hook->addError(self::MC_ERROR_PH, $this->modx->lexicon('mailchimpsubscribe.error.missing_field_config_scriptproperty'));
+            return false;
+        }
+
+        foreach ($fields as $field) {
+            list($fieldName, $mergeTag) = explode('=', $field);
+
+            $this->mapping[$mergeTag] = $fieldName;
+        }
+
+        if (!array_key_exists('EMAIL', $this->mapping)) {
+            $this->hook->addError(self::MC_ERROR_PH, $this->modx->lexicon('mailchimpsubscribe.error.missing_required_config_field', ['tag' => 'EMAIL']));
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Set the values array which contains all merge tags and form values which will be pushed to mailchimp.
+     */
+    private function setValues()
+    {
+        foreach ($this->mapping as $mergeTag => $fieldname) {
+            if ($mergeTag !== 'EMAIL') {
+                $this->values[$mergeTag] = $this->formatValue($this->hook->getValue($fieldname));
+            }
+        }
+    }
+
+    /**
      * Init MailChimp REST Enabled API 3.0 Wrapper Class.
      *
      * https://github.com/vatps/mailchimp-rest-api
-     *
-     * @return \VPS\MailChimp
      */
     private function initMailChimpApi()
     {
-        $mcApiKey = $this->modx->getOption('mailchimpsubscribe.mailchimp_api_key');
-        $mc       = new \VPS\MailChimp($mcApiKey);
-
-        return $mc;
+        $this->mailchimp = new \VPS\MailChimp($this->modx->getOption('mailchimpsubscribe.mailchimp_api_key'));
     }
 
     /**
@@ -165,8 +238,9 @@ class MailChimpSubscribe
      */
     public function getMailChimpLists()
     {
-        $mc     = $this->initMailChimpApi();
-        $result = $mc->get('/lists/');
+        $this->initMailChimpApi();
+
+        $result = $this->mailchimp->get('/lists/');
 
         $tvOutput = '- Select a mailchimp list - ==0';
         if (isset($result['lists']) && !empty($result['lists'])) {
@@ -188,36 +262,43 @@ class MailChimpSubscribe
     {
         $this->modx->lexicon->load('mailchimpsubscribe:default');
 
-        $mc     = $this->initMailChimpApi();
-        $values = $hook->getValues();
-        if ($values['newsgroup'] != 'yes') {
+        /* Set hook. */
+        $this->setHook($hook);
+
+        /* Initialize mailchimp api. */
+        $this->initMailChimpApi();
+
+        /* Set subscribe fields based on scriptproperties. */
+        $this->setSubscribeFields();
+
+        $values = $this->hook->getValues();
+        if ($values[$this->subscribeField] === $this->subscribeFieldValue) {
             return true;
         }
 
-        $listId    = $this->setListId($scriptProperties);
-        $userEmail = trim(strtolower($values['email']));
-        $userName  = trim($values['name']);
-        $company   = trim($values['company_name']);
+        $valid = $this->setMapping();
+        if (!$valid) {
+            return false;
+        }
 
-        /**
-         * No list id found.
-         */
-        if (!isset($listId) || $listId === 0 || empty($listId)) {
-            $hook->addError(
-                'mailchimp',
+        $listId = $this->setListId($scriptProperties);
+        $email  = $this->formatValue($this->hook->getValue($this->mapping['EMAIL']));
+
+        $this->setValues();
+
+        /* No list id found. */
+        if (empty($listId)) {
+            $this->hook->addError(
+                self::MC_ERROR_PH,
                 $this->modx->lexicon('mailchimpsubscribe.error.no_list_found', [], $this->modx->cultureKey)
             );
-            $hook->hasErrors();
-            $this->modx->setPlaceholder('fi.validation_error', true);
 
             return false;
         }
 
-        $subscribeUser = $this->checkMCSubscriberStatus($mc, $listId, $userEmail);
+        $subscribeUser = $this->checkMCSubscriberStatus($listId, $email);
         if ($subscribeUser === false) {
-            $hook->addError('mailchimp', $this->mcSubscribeMessage);
-            $hook->hasErrors();
-            $this->modx->setPlaceholder('fi.validation_error', true);
+            $this->hook->addError(self::MC_ERROR_PH, $this->mcSubscribeMessage);
 
             return false;
         }
@@ -235,37 +316,29 @@ class MailChimpSubscribe
          */
         $subscribeStatus = 'pending';
         if ($this->mcSubscribeMode === 'update') {
-            $result = $mc->PATCH(
-                '/lists/'. $listId . '/members/' . md5($userEmail),
+            $result = $this->mailchimp->PATCH(
+                '/lists/' . $listId . '/members/' . md5($email),
                 [
-                     'email_address' => $userEmail,
-                     'merge_fields'  => [
-                         $this->mcFieldName    => $userName,
-                         $this->mcFieldCompany => $company
-                     ],
-                     'status' => $subscribeStatus
+                     'email_address' => $email,
+                     'merge_fields'  => $this->values,
+                     'status'        => $subscribeStatus
                 ]
             );
         } else {
-            $result = $mc->post(
-                '/lists/'. $listId . '/members',
+            $result = $this->mailchimp->post(
+                '/lists/' . $listId . '/members',
                 [
-                    'email_address' => $userEmail,
-                    'merge_fields'  => [
-                        $this->mcFieldName    => $userName,
-                        $this->mcFieldCompany => $company
-                    ],
-                    'status' => $subscribeStatus
+                    'email_address' => $email,
+                    'merge_fields'  => $this->values,
+                    'status'        => $subscribeStatus
                 ]
             );
         }
 
-        if ($result['status'] != $subscribeStatus) {
+        if ($result['status'] !== $subscribeStatus) {
             $response = $result['title'] . ': '  . $result['detail'];
 
-            $hook->addError('mailchimp', $response);
-            $hook->hasErrors();
-            $this->modx->setPlaceholder('fi.validation_error', true);
+            $this->hook->addError(self::MC_ERROR_PH, $response);
 
             return false;
         }
@@ -274,23 +347,21 @@ class MailChimpSubscribe
     }
 
     /**
-     * Check mailchimp subscriber status by emailaddress.
+     * Check mailchimp subscriber status by e0mailaddress.
      *
-     * @param \VPS\MailChimp    $mc         MailChimp REST API Object.
      * @param string            $listId     List id as specified in resource TV.
      * @param string            $email      Form value emailaddress.
      *
      * @return  bool
      */
-    public function checkMCSubscriberStatus($mc, $listId, $email)
+    public function checkMCSubscriberStatus($listId, $email)
     {
         $this->modx->lexicon->load('mailchimpsubscribe:default');
-        $result = $mc->get('/lists/' . $listId . '/members/' . md5($email));
 
-        /**
-         * If status 404, the emailaddress is unknown and emailaddress can be subscribed.
-         */
-        if ($result['status'] == '404') {
+        $result = $this->mailchimp->get('/lists/' . $listId . '/members/' . md5($email));
+
+        /* If status 404, the e-mailaddress is unknown and e-mailaddress can be subscribed. */
+        if ($result['status'] === 404) {
             return true;
         }
 
@@ -327,5 +398,15 @@ class MailChimpSubscribe
         }
 
         return false;
+    }
+
+    /**
+     * Format form values.
+     *
+     * @param $value
+     * @return string
+     */
+    private function formatValue($value) {
+        return trim($value);
     }
 }

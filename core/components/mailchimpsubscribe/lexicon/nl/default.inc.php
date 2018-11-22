@@ -19,3 +19,5 @@ $_lang['mailchimpsubscribe.error.pending']       = 'Uw inschrijving voor de nieu
 U kunt deze bevestigen middels de email die u ontvangen heeft in uw inbox.';
 $_lang['mailchimpsubscribe.error.cleaned']       = 'Het door u opgegeven e-mailadres is verwijderd van de nieuwsbrief lijst aangezien emails niet konden
 worden afgeleverd op dit e-mailadres.';
+$_lang['mailchimpsubscribe.error.missing_field_config_scriptproperty'] = 'De scriptproperty mailchimpFields ontbreekt. Koppel de velden aan de MailChimp merge tags door deze scriptproperty toe te voegen.';
+$_lang['mailchimpsubscribe.error.missing_required_config_field'] = 'Het verplichte merge tag veld [[+tag]] kon niet worden gevonden in de mailchimpFields scriptproperty.';
