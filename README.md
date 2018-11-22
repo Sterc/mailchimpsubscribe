@@ -61,7 +61,7 @@ The example below uses the provided MailChimp list ID from the current resources
         
 <form action="[[~[[*id]]]]" role="form" method="post" novalidate>
     <input type="hidden" name="nospam" value="" />
-    <input type="hidden" name="newsgroup" value="yes"/>
+    <input type="hidden" name="newsletter" value="1"/>
     
     [[!+fi.error.mailchimp:notempty=`
         <p class="error">[[!+fi.error.mailchimp]]</p>
