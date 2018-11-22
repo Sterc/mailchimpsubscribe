@@ -1,7 +1,7 @@
 ---------------------------------------
 MailChimpSubscribe
 ---------------------------------------
-Version: 1.0.0-pl
+Version: 1.0.1-pl
 Author: Sterc <modx@sterc.nl>
 ---------------------------------------
 
@@ -25,3 +25,10 @@ How to get set up
 * Add MailChimpSubscribe to your FormIt hooks
 * Add in your chunk the placeholder fi.error.mailchimp, which holds all MailChimp error messages.
 * Add a field called newsgroup, if the value of this field is set to yes, the user will be subscribed to the mailchimp list.
+
+Properties
+
+* mailchimpListId: Mailchimp List ID.
+* mailchimpFields: Configuration containing the field mapping between FormIt form and Mailchimp merge tags.
+* mailchimpSubscribeField: Field name to use for subscribing users to mailchimp.
+* mailchimpSubscribeFieldValue: Field value to use for subscribing users to mailchimp.

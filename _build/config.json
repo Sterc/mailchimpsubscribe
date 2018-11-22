@@ -3,7 +3,7 @@
     "lowCaseName": "mailchimpsubscribe",
     "description": "Handles Mailchimp subscriptions",
     "author": "Sterc",
-    "version": "1.0.0-pl",
+    "version": "1.0.1-pl",
     "package":{
         "systemSettings": [{
             "key": "mailchimp_api_key",
