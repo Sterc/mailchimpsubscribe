@@ -240,16 +240,20 @@ class MailChimpSubscribe
     {
         $this->initMailChimpApi();
 
-        $result = $this->mailchimp->get('/lists/');
+        $params = array('count' => 100);
+        $result = $this->mailchimp->get('/lists/?' . http_build_query($params));
 
-        $tvOutput = '- Select a mailchimp list - ==0';
+        $options = [];
         if (isset($result['lists']) && !empty($result['lists'])) {
             foreach ($result['lists'] as $list) {
-                $tvOutput .= '||' . $list['name'] . '==' . $list['id'];
+                $options[$list['name']] = $list['name'] . '==' . $list['id'];
             }
         }
 
-        return $tvOutput;
+        asort($options, SORT_NATURAL);
+        array_unshift($options, '- Select a mailchimp list - ==0');
+
+        return implode('||', $options);
     }
 
     /**
@@ -272,7 +276,7 @@ class MailChimpSubscribe
         $this->setSubscribeFields();
 
         $values = $this->hook->getValues();
-        if ($values[$this->subscribeField] === $this->subscribeFieldValue) {
+        if ($values[$this->subscribeField] !== $this->subscribeFieldValue) {
             return true;
         }
 
