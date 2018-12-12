@@ -32,3 +32,18 @@ Properties
 * mailchimpFields: Configuration containing the field mapping between FormIt form and Mailchimp merge tags.
 * mailchimpSubscribeField: Field name to use for subscribing users to mailchimp.
 * mailchimpSubscribeFieldValue: Field value to use for subscribing users to mailchimp.
+
+Example usage
+
+[[!FormIt?
+&hooks=`MailChimpSubscribe,redirect`
+&validate=`email:email:required,name:required`
+&redirectTo=`[[++page_newsletter_thanks]]`
+&validationErrorMessage=`true`
+&store=`1`
+&submitVar=`newsletter-submit`
+&mailchimpListId=`12345678abc`
+&mailchimpFields=`name=FNAME,email=EMAIL`
+&mailchimpSubscribeField=`newsletter`
+&mailchimpSubscribeFieldValue=`1`
+]]
