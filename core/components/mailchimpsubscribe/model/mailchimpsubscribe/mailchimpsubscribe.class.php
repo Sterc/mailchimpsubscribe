@@ -232,6 +232,25 @@ class MailChimpSubscribe
     }
 
     /**
+     * Set mailchimp subscriber status on subscription.
+     *
+     * @param $scriptProperties
+     *
+     * @return null
+     */
+    private function setSubscriberStatus($scriptProperties)
+    {
+        if (isset($scriptProperties['mailchimpSubscribeStatus']) &&
+            !empty($scriptProperties['mailchimpSubscribeStatus'])) {
+            $status = $scriptProperties['mailchimpSubscribeStatus'];
+        } else {
+            $status = 'pending';
+        }
+
+        return $status;
+    }
+
+    /**
      * Retrieve all MailChimp lists as TV select options.
      *
      * @return string
@@ -318,7 +337,7 @@ class MailChimpSubscribe
          *
          * http://developer.mailchimp.com/documentation/mailchimp/guides/manage-subscribers-with-the-mailchimp-api/
          */
-        $subscribeStatus = 'pending';
+        $subscribeStatus = $this->setSubscriberStatus($scriptProperties);
         if ($this->mcSubscribeMode === 'update') {
             $result = $this->mailchimp->PATCH(
                 '/lists/' . $listId . '/members/' . md5($email),
@@ -346,12 +365,17 @@ class MailChimpSubscribe
 
             return false;
         }
+        // Add tags to subscription (Doesn't kill the process)
+        if (!empty($scriptProperties['mailchimpTags'])  &&
+            isset($scriptProperties['mailchimpTags'])) {
+            $this->addTags($listId, $email, $scriptProperties['mailchimpTags']);
+        }
 
         return true;
     }
 
     /**
-     * Check mailchimp subscriber status by e0mailaddress.
+     * Check mailchimp subscriber status by emailaddress.
      *
      * @param string            $listId     List id as specified in resource TV.
      * @param string            $email      Form value emailaddress.
@@ -402,6 +426,39 @@ class MailChimpSubscribe
         }
 
         return false;
+    }
+
+    /**
+     * Processes comma separated value to tags for subscribes
+     *
+     * @param $listId
+     * @param $email
+     * @param $tags
+     * @return string
+     */
+    public function addTags($listId, $email, $tags)
+    {
+        $data = [];
+        $hashed = md5($email);
+
+        $tags = explode(',', $tags);
+
+        // Needs array and status active to create tag if not existing
+        foreach ($tags as $value) {
+            $data[] = [
+                'name'   => $value,
+                'status' => 'active'
+            ];
+        }
+
+        $result = $this->mailchimp->post(
+            '/lists/' . $listId . '/members/' . $hashed . '/tags',
+            [
+                'tags'  => $data
+            ]
+        );
+
+        return $result;
     }
 
     /**

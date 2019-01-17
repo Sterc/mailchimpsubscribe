@@ -1,5 +1,10 @@
 Changelog for MailChimpSubscribe, a hook for FormIt.
 
+MailChimpSubscribe 1.2.0-pl
+==============
+- Added options to add tags to subscription
+- Added option dynamic setting the subscription status to overwrite double opt-in.
+
 MailChimpSubscribe 1.0.1-pl
 ==============
 - Added options for dynamic mapping of merge tags and FormIt fields.

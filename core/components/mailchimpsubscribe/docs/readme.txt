@@ -1,7 +1,7 @@
 ---------------------------------------
 MailChimpSubscribe
 ---------------------------------------
-Version: 1.0.1-pl
+Version: 1.2.0-pl
 Author: Sterc <modx@sterc.nl>
 ---------------------------------------
 
@@ -30,8 +30,10 @@ Properties
 
 * mailchimpListId: Mailchimp List ID.
 * mailchimpFields: Configuration containing the field mapping between FormIt form and Mailchimp merge tags.
+* mailchimpSubscribeStatus: Able to set the subscription status (subscribed, unsubscribed, pending, cleaned), default is pending.
 * mailchimpSubscribeField: Field name to use for subscribing users to mailchimp.
 * mailchimpSubscribeFieldValue: Field value to use for subscribing users to mailchimp.
+* mailchimpTags: Comma separated tags you want the added subscriber to have.
 
 Example usage
 
@@ -43,7 +45,9 @@ Example usage
 &store=`1`
 &submitVar=`newsletter-submit`
 &mailchimpListId=`12345678abc`
+&mailchimpSubscribeStatus=`pending`
 &mailchimpFields=`name=FNAME,email=EMAIL`
 &mailchimpSubscribeField=`newsletter`
 &mailchimpSubscribeFieldValue=`1`
+&mailchimpTags=`contactform,new-lead`
 ]]
