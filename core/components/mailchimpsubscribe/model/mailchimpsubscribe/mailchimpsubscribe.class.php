@@ -294,11 +294,13 @@ class MailChimpSubscribe
         /* Set subscribe fields based on scriptproperties. */
         $this->setSubscribeFields();
 
+        /* Fetch data from hook */
         $values = $this->hook->getValues();
         if ($values[$this->subscribeField] !== $this->subscribeFieldValue) {
             return true;
         }
 
+        /* Validate the properties */
         $valid = $this->setMapping();
         if (!$valid) {
             return false;
@@ -306,7 +308,6 @@ class MailChimpSubscribe
 
         $listId = $this->setListId($scriptProperties);
         $email  = $this->formatValue($this->hook->getValue($this->mapping['EMAIL']));
-
         $this->setValues();
 
         /* No list id found. */
@@ -319,6 +320,7 @@ class MailChimpSubscribe
             return false;
         }
 
+        /* Check if user is allowed to be processed */
         $subscribeUser = $this->checkMCSubscriberStatus($listId, $email);
         if ($subscribeUser === false) {
             $this->hook->addError(self::MC_ERROR_PH, $this->mcSubscribeMessage);
@@ -338,6 +340,24 @@ class MailChimpSubscribe
          * http://developer.mailchimp.com/documentation/mailchimp/guides/manage-subscribers-with-the-mailchimp-api/
          */
         $subscribeStatus = $this->setSubscriberStatus($scriptProperties);
+
+        /* Check if tags are set and status is not subscribed */
+        if ($subscribeStatus !== 'subscribed' &&
+            !empty($scriptProperties['mailchimpTags'])  &&
+            isset($scriptProperties['mailchimpTags'])
+        ) {
+            $this->hook->addError(
+                self::MC_ERROR_PH,
+                $this->modx->lexicon(
+                    'mailchimpsubscribe.error.incorrect_status',
+                    [],
+                    $this->modx->cultureKey
+                )
+            );
+
+            return false;
+        }
+
         if ($this->mcSubscribeMode === 'update') {
             $result = $this->mailchimp->PATCH(
                 '/lists/' . $listId . '/members/' . md5($email),
@@ -365,9 +385,12 @@ class MailChimpSubscribe
 
             return false;
         }
-        // Add tags to subscription (Doesn't kill the process)
-        if (!empty($scriptProperties['mailchimpTags'])  &&
-            isset($scriptProperties['mailchimpTags'])) {
+
+        /* Add tags to subscription (Has no error handeling to prevent the process being killed) */
+        if ($subscribeStatus === 'subscribed' &&
+            !empty($scriptProperties['mailchimpTags'])  &&
+            isset($scriptProperties['mailchimpTags'])
+        ) {
             $this->addTags($listId, $email, $scriptProperties['mailchimpTags']);
         }
 
@@ -438,12 +461,12 @@ class MailChimpSubscribe
      */
     public function addTags($listId, $email, $tags)
     {
-        $data = [];
         $hashed = md5($email);
+        $data = [];
 
         $tags = explode(',', $tags);
 
-        // Needs array and status active to create tag if not existing
+        /* Needs array and status active to create tag if not existing */
         foreach ($tags as $value) {
             $data[] = [
                 'name'   => $value,
@@ -451,6 +474,7 @@ class MailChimpSubscribe
             ];
         }
 
+        /* Post data to mailchimp */
         $result = $this->mailchimp->post(
             '/lists/' . $listId . '/members/' . $hashed . '/tags',
             [

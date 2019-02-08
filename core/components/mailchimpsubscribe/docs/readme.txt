@@ -33,21 +33,34 @@ Properties
 * mailchimpSubscribeStatus: Able to set the subscription status (subscribed, unsubscribed, pending, cleaned), default is pending.
 * mailchimpSubscribeField: Field name to use for subscribing users to mailchimp.
 * mailchimpSubscribeFieldValue: Field value to use for subscribing users to mailchimp.
-* mailchimpTags: Comma separated tags you want the added subscriber to have.
+* mailchimpTags: Comma separated tags you want the added subscriber to have. (Required mailchimpSubscribeStatus to be subscribed)
 
-Example usage
-
+Basic usage without tags
 [[!FormIt?
-&hooks=`MailChimpSubscribe,redirect`
-&validate=`email:email:required,name:required`
-&redirectTo=`[[++page_newsletter_thanks]]`
-&validationErrorMessage=`true`
-&store=`1`
-&submitVar=`newsletter-submit`
-&mailchimpListId=`12345678abc`
-&mailchimpSubscribeStatus=`pending`
-&mailchimpFields=`name=FNAME,email=EMAIL`
-&mailchimpSubscribeField=`newsletter`
-&mailchimpSubscribeFieldValue=`1`
-&mailchimpTags=`contactform,new-lead`
+    &hooks=`MailChimpSubscribe,redirect`
+    &validate=`email:email:required,name:required`
+    &redirectTo=`[[++page_newsletter_thanks]]`
+    &validationErrorMessage=`true`
+    &store=`1`
+    &submitVar=`newsletter-submit`
+    &mailchimpListId=`12345678abc`
+    &mailchimpFields=`name=FNAME,email=EMAIL`
+    &mailchimpSubscribeField=`newsletter`
+    &mailchimpSubscribeFieldValue=`1`
+]]
+
+Implementation with tags.
+[[!FormIt?
+    &hooks=`MailChimpSubscribe,redirect`
+    &validate=`email:email:required,name:required`
+    &redirectTo=`[[++page_newsletter_thanks]]`
+    &validationErrorMessage=`true`
+    &store=`1`
+    &submitVar=`newsletter-submit`
+    &mailchimpListId=`12345678abc`
+    &mailchimpSubscribeStatus=`subscribed` <-- Important, if the status is not subscribed then the tags won't be added.
+    &mailchimpFields=`name=FNAME,email=EMAIL`
+    &mailchimpTags=`contactform,new-lead`
+    &mailchimpSubscribeField=`newsletter`
+    &mailchimpSubscribeFieldValue=`1`
 ]]

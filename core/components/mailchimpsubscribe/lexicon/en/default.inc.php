@@ -21,3 +21,4 @@ $_lang['mailchimpsubscribe.error.cleaned']       = 'The provided E-mailaddress h
 from the mailing list due to failing to deliver emails to this E-mailaddress.';
 $_lang['mailchimpsubscribe.error.missing_field_config_scriptproperty'] = 'The scriptproperty mailchimpFields was not found, please configure the merge tags using this scriptproperty.';
 $_lang['mailchimpsubscribe.error.missing_required_config_field'] = 'Missing required config field for merge tag: [[+tag]]. Please add this field into the mailchimpFields scriptproperty.';
+$_lang['mailchimpsubscribe.error.incorrect_status'] = 'Your status in incorrect for processing tags, make sure it\'s set to subscribed';
