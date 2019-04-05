@@ -47,10 +47,8 @@ The example below uses the provided Mailchimp list ID from the current resources
 &mailchimpListId
 ```
 
-```
-#!html
-
 ####Basic usage without tags####
+```
 [[!FormIt?
     &hooks=`MailChimpSubscribe,redirect`
     &validate=`email:email:required,name:required`
@@ -64,7 +62,8 @@ The example below uses the provided Mailchimp list ID from the current resources
     &mailchimpSubscribeFieldValue=`1`
 ]]
 
-####Implementation with tags.####
+####Implementation with tags####
+```
 [[!FormIt?
     &hooks=`MailChimpSubscribe,redirect`
     &validate=`email:email:required,name:required`
@@ -79,7 +78,10 @@ The example below uses the provided Mailchimp list ID from the current resources
     &mailchimpSubscribeField=`newsletter`
     &mailchimpSubscribeFieldValue=`1`
 ]]
-        
+```
+
+```
+#!html
 <form action="[[~[[*id]]]]" role="form" method="post" novalidate>
     <input type="hidden" name="nospam" value="" />
     <input type="hidden" name="newsletter" value="1"/>
