@@ -107,7 +107,6 @@ The example below uses the provided Mailchimp list ID from the current resources
     <div class="form-group">
         <input type="submit" name="newsletter-submit" value="Submit">
     </div>
-        
 </form>
 
 ```
