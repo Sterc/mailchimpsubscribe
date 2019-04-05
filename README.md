@@ -61,6 +61,7 @@ The example below uses the provided Mailchimp list ID from the current resources
     &mailchimpSubscribeField=`newsletter`
     &mailchimpSubscribeFieldValue=`1`
 ]]
+```
 
 ####Implementation with tags####
 ```
@@ -82,6 +83,7 @@ The example below uses the provided Mailchimp list ID from the current resources
 
 ```
 #!html
+
 <form action="[[~[[*id]]]]" role="form" method="post" novalidate>
     <input type="hidden" name="nospam" value="" />
     <input type="hidden" name="newsletter" value="1"/>
@@ -107,4 +109,5 @@ The example below uses the provided Mailchimp list ID from the current resources
     </div>
         
 </form>
+
 ```
