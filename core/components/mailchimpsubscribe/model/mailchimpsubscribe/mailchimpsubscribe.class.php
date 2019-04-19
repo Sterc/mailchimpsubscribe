@@ -93,6 +93,12 @@ class MailChimpSubscribe
     private $subscribeFieldValue = 'yes';
 
     /**
+     * Prevent mailchimpSubscribe from stopping formit proccess
+     * @var bool
+     */
+    private $valideSubscription = false;
+
+    /**
      * Initialize the class.
      *
      * @since    1.0.0
@@ -232,6 +238,23 @@ class MailChimpSubscribe
     }
 
     /**
+     * Check if subscription needs to be validated
+     *
+     * @param $scriptProperties
+     *
+     * @return null
+     */
+    private function setValidateSubscription($scriptProperties)
+    {
+        if (isset($scriptProperties['mailchimpValidate']) &&
+            !empty($scriptProperties['mailchimpValidate'])) {
+            $this->valideSubscription = $scriptProperties['mailchimpValidate'];
+        }
+
+        return true;
+    }
+
+    /**
      * Set mailchimp subscriber status on subscription.
      *
      * @param $scriptProperties
@@ -293,6 +316,7 @@ class MailChimpSubscribe
 
         /* Set subscribe fields based on scriptproperties. */
         $this->setSubscribeFields();
+        $this->setValidateSubscription($scriptProperties);
 
         /* Fetch data from hook */
         $values = $this->hook->getValues();
@@ -322,7 +346,7 @@ class MailChimpSubscribe
 
         /* Check if user is allowed to be processed */
         $subscribeUser = $this->checkMCSubscriberStatus($listId, $email);
-        if ($subscribeUser === false) {
+        if ($subscribeUser === false && $this->valideSubscription) {
             $this->hook->addError(self::MC_ERROR_PH, $this->mcSubscribeMessage);
 
             return false;

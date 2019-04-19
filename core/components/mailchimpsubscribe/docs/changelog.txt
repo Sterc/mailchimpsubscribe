@@ -1,5 +1,9 @@
 Changelog for MailChimpSubscribe, a hook for FormIt.
 
+MailChimpSubscribe 1.2.2-pl
+==============
+- Prevent mailchimpsubscribe from stopping the form process unless mailchimpValidate property is set to true
+
 MailChimpSubscribe 1.2.1-pl
 ==============
 - Update README.md

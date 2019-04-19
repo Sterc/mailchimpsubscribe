@@ -34,6 +34,7 @@ Properties
 * mailchimpSubscribeField: Field name to use for subscribing users to mailchimp.
 * mailchimpSubscribeFieldValue: Field value to use for subscribing users to mailchimp.
 * mailchimpTags: Comma separated tags you want the added subscriber to have. (Required mailchimpSubscribeStatus to be subscribed)
+* mailchimpValidate: Set to true if you want to check if user is already subscribed and return error, default is false
 
 Basic usage without tags
 [[!FormIt?
