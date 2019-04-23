@@ -402,7 +402,7 @@ class MailChimpSubscribe
             );
         }
 
-        if ($result['status'] !== $subscribeStatus) {
+        if ($result['status'] !== $subscribeStatus && $this->valideSubscription) {
             $response = $result['title'] . ': '  . $result['detail'];
 
             $this->hook->addError(self::MC_ERROR_PH, $response);
