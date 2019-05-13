@@ -382,26 +382,18 @@ class MailChimpSubscribe
             return false;
         }
 
-        if ($this->mcSubscribeMode === 'update') {
-            $result = $this->mailchimp->PATCH(
-                '/lists/' . $listId . '/members/' . md5($email),
-                [
-                     'email_address' => $email,
-                     'merge_fields'  => $this->values,
-                     'status'        => $subscribeStatus
-                ]
-            );
-        } else {
-            $result = $this->mailchimp->post(
-                '/lists/' . $listId . '/members',
-                [
-                    'email_address' => $email,
-                    'merge_fields'  => $this->values,
-                    'status'        => $subscribeStatus
-                ]
-            );
-        }
+          $params = [
+            'email_address' => $email,
+            'status'        => $subscribeStatus,
+            'merge_fields'  => (object) $this->values
+        ];
 
+        if ($this->mcSubscribeMode === 'update') {
+            $result = $this->mailchimp->PATCH('/lists/' . $listId . '/members/' . md5($email), $params);
+        } else {
+            $result = $this->mailchimp->post('/lists/' . $listId . '/members', $params);
+        }
+        
         if ($result['status'] !== $subscribeStatus && $this->valideSubscription) {
             $response = $result['title'] . ': '  . $result['detail'];
 
