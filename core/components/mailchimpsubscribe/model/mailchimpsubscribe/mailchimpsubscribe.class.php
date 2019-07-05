@@ -111,19 +111,19 @@ class MailChimpSubscribe
         $this->namespace = $this->modx->getOption('namespace', $config, 'mailchimpsubscribe');
 
         $corePath = $this->modx->getOption(
-            'site.core_path',
+            'mailchimpsubscribe.core_path',
             $config,
             $this->modx->getOption('core_path')   . 'components/mailchimpsubscribe/'
         );
 
         $assetsUrl = $this->modx->getOption(
-            'site.assets_url',
+            'mailchimpsubscribe.assets_url',
             $config,
             $this->modx->getOption('assets_url')  . 'components/mailchimpsubscribe/'
         );
 
         $assetsPath = $this->modx->getOption(
-            'site.assets_path',
+            'mailchimpsubscribe.assets_path',
             $config,
             $this->modx->getOption('assets_path') . 'components/mailchimpsubscribe/'
         );
