@@ -1,20 +1,18 @@
-# MailChimpSubscribe #
+# MailChimpSubscribe
 
 Package for subscribing users in Mailchimp lists using FormIt. Adds a snippet for retrieving Mailchimp lists in a single select TV and a FormIt hook for subscribing Mailchimp users to the list provided in the pages Template Variable.
 
-## Functionalities ###
+## Functionalities
 
 * FormIt hook for subscribing users to Mailchimp lists based on TV value
 * MailChimpGetLists: Snippet for creating a select list of MailChimp lists.
 
-## How do I get set up? ###
+## How do I get set up?
 
 * Add MailChimp API Key in systemsettings: mailchimpsubscribe.mailchimp_api_key
 * **Option 1:** Create a new single select TV variable and set the input option values to:    
     
-```
-#!php
-
+```php
 @EVAL return $modx->runSnippet('MailChimpGetLists');
 ```
 * Add Mailchimp List ID TV in systemsettings: mailchimpsubscribe.list_tv
@@ -36,19 +34,21 @@ Package for subscribing users in Mailchimp lists using FormIt. Adds a snippet fo
 **Note**
 The property `mailchimpFields` always requires a field to be set for the merge tag `EMAIL`, for example: email=EMAIL.
 
-### Dependencies ###
+### Dependencies
 
 * FormIt
 
+### Example usage
 
-### Example usage ###
 The example below uses the provided Mailchimp list ID from the current resources TV where the Mailchimp List ID is set. It is also possible to use a scriptProperty to set the MailChimp list ID. Therefore add the following to your FormIt hook:
-```
+
+```php
 &mailchimpListId
 ```
 
-####Basic usage without tags####
-```
+#### Basic usage without tags
+
+```php
 [[!FormIt?
     &hooks=`MailChimpSubscribe,redirect`
     &validate=`email:email:required,name:required`
@@ -63,8 +63,9 @@ The example below uses the provided Mailchimp list ID from the current resources
 ]]
 ```
 
-####Implementation with tags####
-```
+#### Implementation with tags
+
+```php
 [[!FormIt?
     &hooks=`MailChimpSubscribe,redirect`
     &validate=`email:email:required,name:required`
@@ -81,9 +82,7 @@ The example below uses the provided Mailchimp list ID from the current resources
 ]]
 ```
 
-```
-#!html
-
+``` html
 <form action="[[~[[*id]]]]" role="form" method="post" novalidate>
     <input type="hidden" name="nospam" value="" />
     <input type="hidden" name="newsletter" value="1"/>
@@ -108,5 +107,4 @@ The example below uses the provided Mailchimp list ID from the current resources
         <input type="submit" name="newsletter-submit" value="Submit">
     </div>
 </form>
-
 ```
