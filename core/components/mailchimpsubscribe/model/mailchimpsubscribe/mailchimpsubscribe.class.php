@@ -382,7 +382,7 @@ class MailChimpSubscribe
             return false;
         }
 
-          $params = [
+        $params = [
             'email_address' => $email,
             'status'        => $subscribeStatus,
             'merge_fields'  => (object) $this->values
@@ -393,11 +393,11 @@ class MailChimpSubscribe
         } else {
             $result = $this->mailchimp->post('/lists/' . $listId . '/members', $params);
         }
-        
+
         if ($result['status'] !== $subscribeStatus && $this->valideSubscription) {
             // Log the detailed error so it's easier to debug problems
             $this->modx->log(modX::LOG_LEVEL_ERROR, print_r($result, true));
-            
+
             $response = $result['title'] . ': '  . $result['detail'];
 
             $this->hook->addError(self::MC_ERROR_PH, $response);
