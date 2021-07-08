@@ -1,5 +1,10 @@
 Changelog for MailChimpSubscribe, a hook for FormIt.
 
+MailChimpSubscribe 1.2.3-pl
+==============
+- Fix empty merge_fields bug (issue #1)
+- Add a log statement to ease debugging of errors (PR #2, thanks to Mark-H)
+
 MailChimpSubscribe 1.2.2-pl
 ==============
 - Prevent mailchimpsubscribe from stopping the form process unless mailchimpValidate property is set to true
