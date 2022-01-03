@@ -30,6 +30,7 @@ Package for subscribing users in Mailchimp lists using FormIt. Adds a snippet fo
 | mailchimpSubscribeField      | Field name to use for subscribing users to Mailchimp.                                    | newsgroup     |
 | mailchimpSubscribeFieldValue | Field value to use for subscribing users to Mailchimp.                                   | yes           |
 | mailchimpTags                | Comma separated tags you want the added subscriber to have. (Required mailchimpSubscribeStatus to be subscribed) |               |
+| mailchimpInterests           | Comma separated interests you want the added subscriber to have. (Required mailchimpSubscribeStatus to be subscribed) |               |
 
 **Note**
 The property `mailchimpFields` always requires a field to be set for the merge tag `EMAIL`, for example: email=EMAIL.
