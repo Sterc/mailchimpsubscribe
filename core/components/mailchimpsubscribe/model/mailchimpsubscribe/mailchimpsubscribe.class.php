@@ -388,6 +388,10 @@ class MailChimpSubscribe
             'merge_fields'  => (object) $this->values
         ];
 
+        if (($interests = $this->getInterests($scriptProperties)) && count($interests) > 0) {
+            $params['interests'] = $interests;
+        }
+
         if ($this->mcSubscribeMode === 'update') {
             $result = $this->mailchimp->PATCH('/lists/' . $listId . '/members/' . md5($email), $params);
         } else {
@@ -414,6 +418,27 @@ class MailChimpSubscribe
         }
 
         return true;
+    }
+
+    /**
+     * Retrieve interests.
+     * @param array $scriptProperties
+     * @return array
+     */
+    protected function getInterests(array $scriptProperties = [])
+    {
+        $interests = [];
+
+        if (isset($scriptProperties['mailchimpInterests']) && !empty($scriptProperties['mailchimpInterests'])) {
+            $interestIds = explode(',', $scriptProperties['mailchimpInterests']);
+            if (count($interestIds) > 0) {
+                foreach ($interestIds as $interestId) {
+                    $interests[$interestId] = true;
+                }
+            }
+        }
+
+        return $interests;
     }
 
     /**
