@@ -1,5 +1,9 @@
 Changelog for MailChimpSubscribe, a hook for FormIt.
 
+MailChimpSubscribe 1.2.4-pl
+==============
+- Added support for interests
+
 MailChimpSubscribe 1.2.3-pl
 ==============
 - Fix empty merge_fields bug (issue #1)
